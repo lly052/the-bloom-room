@@ -1,7 +1,7 @@
-import React,{ useMemo } from 'react';
+import { useMemo } from 'react';
 import { Order } from '../App';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { TrendingUp, PoundSterling, Package, ShoppingCart } from 'lucide-react';
 
 interface AnalyticsDashboardProps {
@@ -15,7 +15,6 @@ export function AnalyticsDashboard({ orders }: AnalyticsDashboardProps) {
     const totalArrangements = orders.reduce((sum, order) => sum + order.quantity, 0);
     const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
-    // Status distribution
     const statusData = [
       { name: 'Pending', value: orders.filter(o => o.status === 'pending').length, color: '#fbbf24' },
       { name: 'Processing', value: orders.filter(o => o.status === 'processing').length, color: '#3b82f6' },
@@ -25,30 +24,20 @@ export function AnalyticsDashboard({ orders }: AnalyticsDashboardProps) {
       { name: 'Cancelled', value: orders.filter(o => o.status === 'cancelled').length, color: '#ef4444' }
     ].filter(item => item.value > 0);
 
-    // Revenue by month
     const monthlyRevenue = orders.reduce((acc, order) => {
       const month = new Date(order.date).toLocaleString('default', { month: 'short', year: '2-digit' });
-      if (!acc[month]) {
-        acc[month] = 0;
-      }
+      if (!acc[month]) acc[month] = 0;
       acc[month] += order.amount;
       return acc;
     }, {} as Record<string, number>);
 
     const revenueData = Object.entries(monthlyRevenue)
       .map(([month, revenue]) => ({ month, revenue }))
-      .sort((a, b) => {
-        const dateA = new Date(a.month);
-        const dateB = new Date(b.month);
-        return dateA.getTime() - dateB.getTime();
-      })
+      .sort((a, b) => new Date(a.month).getTime() - new Date(b.month).getTime())
       .slice(-6);
 
-    // Top arrangements
     const arrangementRevenue = orders.reduce((acc, order) => {
-      if (!acc[order.arrangement]) {
-        acc[order.arrangement] = 0;
-      }
+      if (!acc[order.arrangement]) acc[order.arrangement] = 0;
       acc[order.arrangement] += order.amount;
       return acc;
     }, {} as Record<string, number>);
@@ -58,11 +47,8 @@ export function AnalyticsDashboard({ orders }: AnalyticsDashboardProps) {
       .sort((a, b) => b.revenue - a.revenue)
       .slice(0, 5);
 
-    // Occasions breakdown
     const occasionCounts = orders.reduce((acc, order) => {
-      if (!acc[order.occasion]) {
-        acc[order.occasion] = 0;
-      }
+      if (!acc[order.occasion]) acc[order.occasion] = 0;
       acc[order.occasion] += 1;
       return acc;
     }, {} as Record<string, number>);
@@ -72,21 +58,11 @@ export function AnalyticsDashboard({ orders }: AnalyticsDashboardProps) {
       .sort((a, b) => b.count - a.count)
       .slice(0, 6);
 
-    return {
-      totalRevenue,
-      totalOrders,
-      totalArrangements,
-      averageOrderValue,
-      statusData,
-      revenueData,
-      arrangementData,
-      occasionData
-    };
+    return { totalRevenue, totalOrders, totalArrangements, averageOrderValue, statusData, revenueData, arrangementData, occasionData };
   }, [orders]);
 
   return (
     <div className="space-y-6">
-      {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -133,9 +109,7 @@ export function AnalyticsDashboard({ orders }: AnalyticsDashboardProps) {
         </Card>
       </div>
 
-      {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Revenue Trend */}
         <Card>
           <CardHeader>
             <CardTitle>Revenue Trend</CardTitle>
@@ -157,7 +131,6 @@ export function AnalyticsDashboard({ orders }: AnalyticsDashboardProps) {
           </CardContent>
         </Card>
 
-        {/* Order Status Distribution */}
         <Card>
           <CardHeader>
             <CardTitle>Order Status</CardTitle>
@@ -186,7 +159,6 @@ export function AnalyticsDashboard({ orders }: AnalyticsDashboardProps) {
           </CardContent>
         </Card>
 
-        {/* Top Arrangements */}
         <Card>
           <CardHeader>
             <CardTitle>Top Arrangements</CardTitle>
@@ -208,7 +180,6 @@ export function AnalyticsDashboard({ orders }: AnalyticsDashboardProps) {
           </CardContent>
         </Card>
 
-        {/* Occasions Breakdown */}
         <Card>
           <CardHeader>
             <CardTitle>Occasions Breakdown</CardTitle>

@@ -27,15 +27,13 @@ export function OrderFilingSystem({ orders, onUpdateOrder, onDeleteOrder, onAddO
 
   const filteredOrders = useMemo(() => {
     return orders.filter(order => {
-      const matchesSearch = 
+      const matchesSearch =
         order.orderNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
         order.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
         order.product.toLowerCase().includes(searchQuery.toLowerCase()) ||
         order.email.toLowerCase().includes(searchQuery.toLowerCase());
-      
       const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
       const matchesPriority = priorityFilter === 'all' || order.priority === priorityFilter;
-      
       return matchesSearch && matchesStatus && matchesPriority;
     });
   }, [orders, searchQuery, statusFilter, priorityFilter]);
@@ -78,22 +76,15 @@ export function OrderFilingSystem({ orders, onUpdateOrder, onDeleteOrder, onAddO
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {/* Filters */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="md:col-span-2 relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                <Input
-                  placeholder="Search orders..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9"
-                />
+                <Input placeholder="Search orders..." value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)} className="pl-9" />
               </div>
-              
+
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Filter by status" />
-                </SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Filter by status" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Statuses</SelectItem>
                   <SelectItem value="pending">Pending</SelectItem>
@@ -104,11 +95,9 @@ export function OrderFilingSystem({ orders, onUpdateOrder, onDeleteOrder, onAddO
                   <SelectItem value="cancelled">Cancelled</SelectItem>
                 </SelectContent>
               </Select>
-              
+
               <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Filter by priority" />
-                </SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Filter by priority" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Priorities</SelectItem>
                   <SelectItem value="low">Low</SelectItem>
@@ -118,12 +107,10 @@ export function OrderFilingSystem({ orders, onUpdateOrder, onDeleteOrder, onAddO
               </Select>
             </div>
 
-            {/* Results count */}
             <div className="text-sm text-slate-600">
               Showing {filteredOrders.length} of {orders.length} orders
             </div>
 
-            {/* Orders Table */}
             <div className="border rounded-lg">
               <Table>
                 <TableHeader>
@@ -142,9 +129,7 @@ export function OrderFilingSystem({ orders, onUpdateOrder, onDeleteOrder, onAddO
                 <TableBody>
                   {filteredOrders.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={9} className="text-center text-slate-500 py-8">
-                        No orders found
-                      </TableCell>
+                      <TableCell colSpan={9} className="text-center text-slate-500 py-8">No orders found</TableCell>
                     </TableRow>
                   ) : (
                     filteredOrders.map((order) => (
@@ -155,41 +140,23 @@ export function OrderFilingSystem({ orders, onUpdateOrder, onDeleteOrder, onAddO
                         <TableCell>{order.quantity}</TableCell>
                         <TableCell>£{order.amount.toLocaleString()}</TableCell>
                         <TableCell>
-                          <Badge variant="outline" className={getStatusColor(order.status)}>
-                            {order.status}
-                          </Badge>
+                          <Badge variant="outline" className={getStatusColor(order.status)}>{order.status}</Badge>
                         </TableCell>
                         <TableCell>
-                          <Badge variant="outline" className={getPriorityColor(order.priority)}>
-                            {order.priority}
-                          </Badge>
+                          <Badge variant="outline" className={getPriorityColor(order.priority)}>{order.priority}</Badge>
                         </TableCell>
                         <TableCell>{new Date(order.date).toLocaleDateString()}</TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-2">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => setViewingOrder(order)}
-                            >
+                            <Button variant="ghost" size="sm" onClick={() => setViewingOrder(order)}>
                               <Eye className="w-4 h-4" />
                             </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => setEditingOrder(order)}
-                            >
+                            <Button variant="ghost" size="sm" onClick={() => setEditingOrder(order)}>
                               <Pencil className="w-4 h-4" />
                             </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => {
-                                if (confirm('Are you sure you want to delete this order?')) {
-                                  onDeleteOrder(order.id);
-                                }
-                              }}
-                            >
+                            <Button variant="ghost" size="sm" onClick={() => {
+                              if (confirm('Are you sure you want to delete this order?')) onDeleteOrder(order.id);
+                            }}>
                               <Trash2 className="w-4 h-4 text-red-600" />
                             </Button>
                           </div>
@@ -204,15 +171,9 @@ export function OrderFilingSystem({ orders, onUpdateOrder, onDeleteOrder, onAddO
         </CardContent>
       </Card>
 
-      {/* Add/Edit Order Dialog */}
       <OrderDialog
         open={isAddDialogOpen || editingOrder !== null}
-        onOpenChange={(open) => {
-          if (!open) {
-            setIsAddDialogOpen(false);
-            setEditingOrder(null);
-          }
-        }}
+        onOpenChange={(open) => { if (!open) { setIsAddDialogOpen(false); setEditingOrder(null); } }}
         order={editingOrder}
         onSave={(order) => {
           if (editingOrder) {
@@ -225,12 +186,9 @@ export function OrderFilingSystem({ orders, onUpdateOrder, onDeleteOrder, onAddO
         }}
       />
 
-      {/* View Order Details Dialog */}
       <OrderDetailsDialog
         open={viewingOrder !== null}
-        onOpenChange={(open) => {
-          if (!open) setViewingOrder(null);
-        }}
+        onOpenChange={(open) => { if (!open) setViewingOrder(null); }}
         order={viewingOrder}
       />
     </div>

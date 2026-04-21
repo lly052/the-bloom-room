@@ -69,10 +69,8 @@ export function TemplateFilingSystem() {
         template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         template.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
         template.createdBy.toLowerCase().includes(searchQuery.toLowerCase());
-
       const matchesCategory = categoryFilter === 'all' || template.category === categoryFilter;
       const matchesType = typeFilter === 'all' || template.type === typeFilter;
-
       return matchesSearch && matchesCategory && matchesType;
     });
   }, [templates, searchQuery, categoryFilter, typeFilter]);
@@ -93,63 +91,46 @@ export function TemplateFilingSystem() {
 
   const getCategoryLabel = (category: Template['category']) => {
     const labels = {
-      opening: 'Opening',
-      closing: 'Closing',
-      delivery: 'Delivery',
-      arrangement: 'Arrangement',
-      'customer-service': 'Customer Service',
-      inventory: 'Inventory',
-      maintenance: 'Maintenance',
-      safety: 'Safety'
+      opening: 'Opening', closing: 'Closing', delivery: 'Delivery',
+      arrangement: 'Arrangement', 'customer-service': 'Customer Service',
+      inventory: 'Inventory', maintenance: 'Maintenance', safety: 'Safety'
     };
     return labels[category];
   };
 
   const getTypeIcon = (type: Template['type']) => {
-    switch (type) {
-      case 'checklist':
-        return <CheckSquare className="w-4 h-4" />;
-      case 'procedure':
-        return <Clock className="w-4 h-4" />;
-      case 'guide':
-        return <FileText className="w-4 h-4" />;
-    }
+    if (type === 'checklist') return <CheckSquare className="w-4 h-4" />;
+    if (type === 'procedure') return <Clock className="w-4 h-4" />;
+    return <FileText className="w-4 h-4" />;
   };
 
   const handleSaveTemplate = async (template: Omit<Template, 'id' | 'lastUpdated'>) => {
     const lastUpdated = new Date().toISOString().split('T')[0];
     if (editingTemplate) {
-      const { error } = await supabase
-        .from('templates')
-        .update({
-          title: template.title,
-          category: template.category,
-          type: template.type,
-          content: template.content,
-          created_by: template.createdBy,
-          last_updated: lastUpdated,
-        })
-        .eq('id', editingTemplate.id);
+      const { error } = await supabase.from('templates').update({
+        title: template.title,
+        category: template.category,
+        type: template.type,
+        content: template.content,
+        created_by: template.createdBy,
+        last_updated: lastUpdated,
+      }).eq('id', editingTemplate.id);
+
       if (!error) {
         setTemplates(prev => prev.map(t =>
-          t.id === editingTemplate.id
-            ? { ...template, id: editingTemplate.id, lastUpdated }
-            : t
+          t.id === editingTemplate.id ? { ...template, id: editingTemplate.id, lastUpdated } : t
         ));
       }
     } else {
-      const { data, error } = await supabase
-        .from('templates')
-        .insert({
-          title: template.title,
-          category: template.category,
-          type: template.type,
-          content: template.content,
-          created_by: template.createdBy,
-          last_updated: lastUpdated,
-        })
-        .select()
-        .single();
+      const { data, error } = await supabase.from('templates').insert({
+        title: template.title,
+        category: template.category,
+        type: template.type,
+        content: template.content,
+        created_by: template.createdBy,
+        last_updated: lastUpdated,
+      }).select().single();
+
       if (!error && data) setTemplates(prev => [rowToTemplate(data), ...prev]);
     }
     setIsAddDialogOpen(false);
@@ -180,22 +161,15 @@ export function TemplateFilingSystem() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {/* Filters */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                <Input
-                  placeholder="Search files..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9"
-                />
+                <Input placeholder="Search files..." value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)} className="pl-9" />
               </div>
 
               <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Filter by category" />
-                </SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Filter by category" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Categories</SelectItem>
                   <SelectItem value="opening">Opening</SelectItem>
@@ -210,9 +184,7 @@ export function TemplateFilingSystem() {
               </Select>
 
               <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Filter by type" />
-                </SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Filter by type" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Types</SelectItem>
                   <SelectItem value="checklist">Checklist</SelectItem>
@@ -222,20 +194,16 @@ export function TemplateFilingSystem() {
               </Select>
             </div>
 
-            {/* Results count */}
             <div className="text-sm text-slate-600">
               Showing {filteredTemplates.length} of {templates.length} files
             </div>
 
-            {/* Templates Grid */}
             {loading ? (
               <div className="text-center text-slate-500 py-12">Loading files...</div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredTemplates.length === 0 ? (
-                  <div className="col-span-full text-center text-slate-500 py-12">
-                    No files found
-                  </div>
+                  <div className="col-span-full text-center text-slate-500 py-12">No files found</div>
                 ) : (
                   filteredTemplates.map((template) => (
                     <Card key={template.id} className="hover:shadow-md transition-shadow">
@@ -264,27 +232,14 @@ export function TemplateFilingSystem() {
                             Updated {new Date(template.lastUpdated).toLocaleDateString()} • {template.createdBy}
                           </div>
                           <div className="flex items-center gap-2 pt-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => setViewingTemplate(template)}
-                              className="flex-1"
-                            >
+                            <Button variant="outline" size="sm" onClick={() => setViewingTemplate(template)} className="flex-1">
                               <Eye className="w-4 h-4 mr-1" />
                               View
                             </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => setEditingTemplate(template)}
-                            >
+                            <Button variant="ghost" size="sm" onClick={() => setEditingTemplate(template)}>
                               <Pencil className="w-4 h-4" />
                             </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleDeleteTemplate(template.id)}
-                            >
+                            <Button variant="ghost" size="sm" onClick={() => handleDeleteTemplate(template.id)}>
                               <Trash2 className="w-4 h-4 text-red-600" />
                             </Button>
                           </div>
@@ -299,25 +254,16 @@ export function TemplateFilingSystem() {
         </CardContent>
       </Card>
 
-      {/* Add/Edit Template Dialog */}
       <TemplateDialog
         open={isAddDialogOpen || editingTemplate !== null}
-        onOpenChange={(open) => {
-          if (!open) {
-            setIsAddDialogOpen(false);
-            setEditingTemplate(null);
-          }
-        }}
+        onOpenChange={(open) => { if (!open) { setIsAddDialogOpen(false); setEditingTemplate(null); } }}
         template={editingTemplate}
         onSave={handleSaveTemplate}
       />
 
-      {/* View Template Dialog */}
       <TemplateViewDialog
         open={viewingTemplate !== null}
-        onOpenChange={(open) => {
-          if (!open) setViewingTemplate(null);
-        }}
+        onOpenChange={(open) => { if (!open) setViewingTemplate(null); }}
         template={viewingTemplate}
       />
     </div>

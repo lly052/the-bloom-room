@@ -51,21 +51,15 @@ export function OrderDetailsDialog({ open, onOpenChange, order }: OrderDetailsDi
           <DialogTitle>Flower Order Details</DialogTitle>
           <DialogDescription>Complete information for {order.orderNumber}</DialogDescription>
         </DialogHeader>
-        
+
         <div className="space-y-6">
-          {/* Status and Priority */}
           <div className="flex items-center gap-3">
-            <Badge variant="outline" className={getStatusColor(order.status)}>
-              {order.status}
-            </Badge>
-            <Badge variant="outline" className={getPriorityColor(order.priority)}>
-              {order.priority} priority
-            </Badge>
+            <Badge variant="outline" className={getStatusColor(order.status)}>{order.status}</Badge>
+            <Badge variant="outline" className={getPriorityColor(order.priority)}>{order.priority} priority</Badge>
           </div>
 
           <Separator />
 
-          {/* Order Information */}
           <div>
             <h3 className="text-slate-900 mb-4">Order Information</h3>
             <div className="grid grid-cols-2 gap-6">
@@ -77,19 +71,13 @@ export function OrderDetailsDialog({ open, onOpenChange, order }: OrderDetailsDi
                     <div className="text-slate-900">{order.orderNumber}</div>
                   </div>
                 </div>
-
                 <div className="flex items-start gap-3">
                   <Calendar className="w-5 h-5 text-slate-400 mt-0.5" />
                   <div>
                     <div className="text-sm text-slate-500">Order Date</div>
-                    <div className="text-slate-900">{new Date(order.date).toLocaleDateString('en-US', { 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}</div>
+                    <div className="text-slate-900">{new Date(order.date).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
                   </div>
                 </div>
-
                 <div className="flex items-start gap-3">
                   <User className="w-5 h-5 text-slate-400 mt-0.5" />
                   <div>
@@ -97,7 +85,6 @@ export function OrderDetailsDialog({ open, onOpenChange, order }: OrderDetailsDi
                     <div className="text-slate-900">{order.customer}</div>
                   </div>
                 </div>
-
                 <div className="flex items-start gap-3">
                   <Mail className="w-5 h-5 text-slate-400 mt-0.5" />
                   <div>
@@ -115,7 +102,6 @@ export function OrderDetailsDialog({ open, onOpenChange, order }: OrderDetailsDi
                     <div className="text-slate-900">{order.arrangement}</div>
                   </div>
                 </div>
-
                 <div className="flex items-start gap-3">
                   <PartyPopper className="w-5 h-5 text-slate-400 mt-0.5" />
                   <div>
@@ -123,7 +109,6 @@ export function OrderDetailsDialog({ open, onOpenChange, order }: OrderDetailsDi
                     <div className="text-slate-900">{order.occasion}</div>
                   </div>
                 </div>
-
                 <div className="flex items-start gap-3">
                   <Package className="w-5 h-5 text-slate-400 mt-0.5" />
                   <div>
@@ -131,7 +116,6 @@ export function OrderDetailsDialog({ open, onOpenChange, order }: OrderDetailsDi
                     <div className="text-slate-900">{order.quantity} {order.quantity === 1 ? 'arrangement' : 'arrangements'}</div>
                   </div>
                 </div>
-
                 <div className="flex items-start gap-3">
                   <PoundSterling className="w-5 h-5 text-slate-400 mt-0.5" />
                   <div>
@@ -145,7 +129,6 @@ export function OrderDetailsDialog({ open, onOpenChange, order }: OrderDetailsDi
 
           <Separator />
 
-          {/* Delivery Information */}
           <div>
             <h3 className="text-slate-900 mb-4">Delivery Information</h3>
             <div className="grid grid-cols-2 gap-6">
@@ -157,7 +140,6 @@ export function OrderDetailsDialog({ open, onOpenChange, order }: OrderDetailsDi
                     <div className="text-slate-900">{order.recipientName}</div>
                   </div>
                 </div>
-
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-slate-400 mt-0.5" />
                   <div>
@@ -175,16 +157,11 @@ export function OrderDetailsDialog({ open, onOpenChange, order }: OrderDetailsDi
                     <div className="text-slate-900">{getDeliveryTypeLabel(order.deliveryType)}</div>
                   </div>
                 </div>
-
                 <div className="flex items-start gap-3">
                   <Calendar className="w-5 h-5 text-slate-400 mt-0.5" />
                   <div>
                     <div className="text-sm text-slate-500">Delivery Date</div>
-                    <div className="text-slate-900">{new Date(order.deliveryDate).toLocaleDateString('en-US', { 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}</div>
+                    <div className="text-slate-900">{new Date(order.deliveryDate).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
                   </div>
                 </div>
               </div>
@@ -196,9 +173,7 @@ export function OrderDetailsDialog({ open, onOpenChange, order }: OrderDetailsDi
                   <MessageSquare className="w-5 h-5 text-slate-400 mt-0.5" />
                   <div className="flex-1">
                     <div className="text-sm text-slate-500">Card Message</div>
-                    <div className="text-slate-900 bg-slate-50 rounded-lg p-3 mt-1 italic">
-                      "{order.message}"
-                    </div>
+                    <div className="text-slate-900 bg-slate-50 rounded-lg p-3 mt-1 italic">"{order.message}"</div>
                   </div>
                 </div>
               </div>
@@ -210,9 +185,7 @@ export function OrderDetailsDialog({ open, onOpenChange, order }: OrderDetailsDi
                   <MessageSquare className="w-5 h-5 text-slate-400 mt-0.5" />
                   <div className="flex-1">
                     <div className="text-sm text-slate-500">Notes & Specifics</div>
-                    <div className="text-slate-900 bg-amber-50 border border-amber-100 rounded-lg p-3 mt-1">
-                      {order.notes}
-                    </div>
+                    <div className="text-slate-900 bg-amber-50 border border-amber-100 rounded-lg p-3 mt-1">{order.notes}</div>
                   </div>
                 </div>
               </div>
@@ -221,7 +194,6 @@ export function OrderDetailsDialog({ open, onOpenChange, order }: OrderDetailsDi
 
           <Separator />
 
-          {/* Summary */}
           <div className="bg-slate-50 rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-slate-600">Subtotal ({order.quantity} × £{(order.amount / order.quantity).toFixed(2)})</span>
