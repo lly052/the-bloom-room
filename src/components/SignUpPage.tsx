@@ -43,7 +43,7 @@ export function SignUpPage({ onSignUpSuccess, onGoToLogin }: SignUpPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-green-50 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl text-slate-900 mb-2">The Bloom Room</h1>
@@ -60,7 +60,7 @@ export function SignUpPage({ onSignUpSuccess, onGoToLogin }: SignUpPageProps) {
               </div>
               <button
                 onClick={onGoToLogin}
-                className="w-full bg-slate-900 text-white rounded-lg py-2 text-sm font-medium hover:bg-slate-700 transition-colors"
+                className="w-full bg-green-700 text-white rounded-lg py-2 text-sm font-medium hover:bg-green-800 transition-colors"
               >
                 Go to Log In
               </button>
@@ -115,7 +115,7 @@ export function SignUpPage({ onSignUpSuccess, onGoToLogin }: SignUpPageProps) {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-slate-900 text-white rounded-lg py-2 text-sm font-medium hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="w-full bg-green-700 text-white rounded-lg py-2 text-sm font-medium hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {isLoading ? 'Creating account...' : 'Create Account'}
               </button>

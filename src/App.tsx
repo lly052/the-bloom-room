@@ -180,7 +180,7 @@ export default function App() {
 
   if (currentPage === 'checking-auth') {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-green-50 flex items-center justify-center">
         <p className="text-slate-500">Loading...</p>
       </div>
     );
@@ -195,8 +195,8 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200">
+    <div className="min-h-screen bg-green-50">
+      <header className="bg-white border-b border-green-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
           <div>
             <h1 className="text-slate-900">The Bloom Room</h1>
