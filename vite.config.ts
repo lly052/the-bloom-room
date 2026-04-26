@@ -2,6 +2,7 @@
   import { defineConfig } from 'vite';
   import react from '@vitejs/plugin-react-swc';
   import path from 'path';
+  /// <reference types="vitest" />
 
   export default defineConfig({
     plugins: [react()],
@@ -49,7 +50,12 @@
         '@': path.resolve(__dirname, './src'),
       },
     },
-    build: {
+    test: {
+      globals: true,
+      environment: 'happy-dom',
+      setupFiles: './src/test/setup.ts',
+    },
+  build: {
       target: 'esnext',
       outDir: 'build',
     },

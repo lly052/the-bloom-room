@@ -7,6 +7,7 @@ import { Badge } from './ui/badge';
 import { Search, Plus, Eye, Pencil, Trash2, FileText, CheckSquare, Clock } from 'lucide-react';
 import { TemplateDialog } from './TemplateDialog';
 import { TemplateViewDialog } from './TemplateViewDialog';
+import { ConfirmDialog } from './ConfirmDialog';
 import { supabase } from '../utils/supabase';
 
 export interface Template {
@@ -50,6 +51,7 @@ export function TemplateFilingSystem() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState<Template | null>(null);
   const [viewingTemplate, setViewingTemplate] = useState<Template | null>(null);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchTemplates() {
@@ -138,10 +140,8 @@ export function TemplateFilingSystem() {
   };
 
   const handleDeleteTemplate = async (id: string) => {
-    if (confirm('Are you sure you want to delete this template?')) {
-      const { error } = await supabase.from('templates').delete().eq('id', id);
-      if (!error) setTemplates(prev => prev.filter(t => t.id !== id));
-    }
+    const { error } = await supabase.from('templates').delete().eq('id', id);
+    if (!error) setTemplates(prev => prev.filter(t => t.id !== id));
   };
 
   return (
@@ -239,7 +239,7 @@ export function TemplateFilingSystem() {
                             <Button variant="ghost" size="sm" onClick={() => setEditingTemplate(template)}>
                               <Pencil className="w-4 h-4" />
                             </Button>
-                            <Button variant="ghost" size="sm" onClick={() => handleDeleteTemplate(template.id)}>
+                            <Button variant="ghost" size="sm" onClick={() => setDeleteTargetId(template.id)}>
                               <Trash2 className="w-4 h-4 text-red-600" />
                             </Button>
                           </div>
@@ -265,6 +265,14 @@ export function TemplateFilingSystem() {
         open={viewingTemplate !== null}
         onOpenChange={(open) => { if (!open) setViewingTemplate(null); }}
         template={viewingTemplate}
+      />
+
+      <ConfirmDialog
+        open={deleteTargetId !== null}
+        onOpenChange={(open) => { if (!open) setDeleteTargetId(null); }}
+        title="Delete File"
+        description="Are you sure you want to delete this file? This cannot be undone."
+        onConfirm={() => { if (deleteTargetId) handleDeleteTemplate(deleteTargetId); }}
       />
     </div>
   );

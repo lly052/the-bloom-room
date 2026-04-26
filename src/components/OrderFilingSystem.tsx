@@ -9,6 +9,7 @@ import { Badge } from './ui/badge';
 import { Search, Plus, Eye, Pencil, Trash2 } from 'lucide-react';
 import { OrderDialog } from './OrderDialog';
 import { OrderDetailsDialog } from './OrderDetailsDialog';
+import { ConfirmDialog } from './ConfirmDialog';
 
 interface OrderFilingSystemProps {
   orders: Order[];
@@ -24,6 +25,7 @@ export function OrderFilingSystem({ orders, onUpdateOrder, onDeleteOrder, onAddO
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
   const [viewingOrder, setViewingOrder] = useState<Order | null>(null);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
   const filteredOrders = useMemo(() => {
     return orders.filter(order => {
@@ -154,9 +156,7 @@ export function OrderFilingSystem({ orders, onUpdateOrder, onDeleteOrder, onAddO
                             <Button variant="ghost" size="sm" onClick={() => setEditingOrder(order)}>
                               <Pencil className="w-4 h-4" />
                             </Button>
-                            <Button variant="ghost" size="sm" onClick={() => {
-                              if (confirm('Are you sure you want to delete this order?')) onDeleteOrder(order.id);
-                            }}>
+                            <Button variant="ghost" size="sm" onClick={() => setDeleteTargetId(order.id)}>
                               <Trash2 className="w-4 h-4 text-red-600" />
                             </Button>
                           </div>
@@ -190,6 +190,14 @@ export function OrderFilingSystem({ orders, onUpdateOrder, onDeleteOrder, onAddO
         open={viewingOrder !== null}
         onOpenChange={(open) => { if (!open) setViewingOrder(null); }}
         order={viewingOrder}
+      />
+
+      <ConfirmDialog
+        open={deleteTargetId !== null}
+        onOpenChange={(open) => { if (!open) setDeleteTargetId(null); }}
+        title="Delete Order"
+        description="Are you sure you want to delete this order? This cannot be undone."
+        onConfirm={() => { if (deleteTargetId) onDeleteOrder(deleteTargetId); }}
       />
     </div>
   );

@@ -3,6 +3,7 @@ import { supabase } from '../utils/supabase';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { FileText, Download, Trash2, Upload, File, Lock } from 'lucide-react';
+import { ConfirmDialog } from './ConfirmDialog';
 
 type StoredFile = {
   name: string;
@@ -38,6 +39,7 @@ export function FilesTab() {
   const [enteredPassword, setEnteredPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [isCheckingPassword, setIsCheckingPassword] = useState(false);
+  const [deleteTargetName, setDeleteTargetName] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -223,9 +225,6 @@ export function FilesTab() {
   }
 
   async function handleDeleteFile(fileName: string) {
-    const displayName = getDisplayName(fileName);
-    if (!confirm(`Are you sure you want to delete "${displayName}"?`)) return;
-
     const { error } = await supabase.storage.from('files').remove([fileName]);
 
     if (error) { setErrorMessage('Could not delete the file. Please try again.'); return; }
@@ -429,7 +428,7 @@ export function FilesTab() {
                           ? <><Lock className="w-3.5 h-3.5 mr-1" />Open</>
                           : <><Download className="w-4 h-4 mr-1" />Open</>}
                       </Button>
-                      <Button variant="ghost" size="sm" onClick={() => handleDeleteFile(file.name)}>
+                      <Button variant="ghost" size="sm" onClick={() => setDeleteTargetName(file.name)}>
                         <Trash2 className="w-4 h-4 text-red-500" />
                       </Button>
                     </div>
@@ -440,6 +439,13 @@ export function FilesTab() {
           )}
         </CardContent>
       </Card>
+      <ConfirmDialog
+        open={deleteTargetName !== null}
+        onOpenChange={(open) => { if (!open) setDeleteTargetName(null); }}
+        title="Delete File"
+        description={`Are you sure you want to delete "${deleteTargetName ? getDisplayName(deleteTargetName) : ''}"? This cannot be undone.`}
+        onConfirm={() => { if (deleteTargetName) handleDeleteFile(deleteTargetName); }}
+      />
     </div>
   );
 }
