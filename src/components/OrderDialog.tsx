@@ -46,6 +46,7 @@ export function OrderDialog({ open, onOpenChange, order, onSave }: OrderDialogPr
   const [showAddTypeInput, setShowAddTypeInput] = useState(false);
   const [newTypeName, setNewTypeName] = useState('');
   const [isSavingType, setIsSavingType] = useState(false);
+  const [addTypeError, setAddTypeError] = useState('');
 
   useEffect(() => {
     async function fetchArrangementTypes() {
@@ -67,8 +68,9 @@ export function OrderDialog({ open, onOpenChange, order, onSave }: OrderDialogPr
     const { error } = await supabase.from('arrangement_types').insert({ name: trimmedName });
 
     if (error) {
-      alert('Could not add that type — it may already exist.');
+      setAddTypeError('Could not add that type — it may already exist.');
     } else {
+      setAddTypeError('');
       setArrangementTypes(prev => [...prev, trimmedName].sort());
       updateField({ arrangement: trimmedName, product: trimmedName });
       setNewTypeName('');
@@ -179,11 +181,12 @@ export function OrderDialog({ open, onOpenChange, order, onSave }: OrderDialogPr
                       <Button type="button" size="sm" onClick={handleAddNewType} disabled={isSavingType}>
                         {isSavingType ? 'Saving...' : 'Add'}
                       </Button>
-                      <Button type="button" size="sm" variant="outline" onClick={() => { setShowAddTypeInput(false); setNewTypeName(''); }}>
+                      <Button type="button" size="sm" variant="outline" onClick={() => { setShowAddTypeInput(false); setNewTypeName(''); setAddTypeError(''); }}>
                         Cancel
                       </Button>
                     </div>
                   )}
+                  {addTypeError && <p className="text-xs text-red-600 mt-1">{addTypeError}</p>}
                 </div>
 
                 <div className="space-y-2">

@@ -126,7 +126,6 @@ export function TemplateViewDialog({ open, onOpenChange, template }: TemplateVie
         </DialogHeader>
         
         <div className="space-y-6">
-          {/* Metadata */}
           <div className="grid grid-cols-2 gap-4">
             <div className="flex items-start gap-3">
               <Calendar className="w-5 h-5 text-slate-400 mt-0.5" />
@@ -151,7 +150,6 @@ export function TemplateViewDialog({ open, onOpenChange, template }: TemplateVie
 
           <Separator />
 
-          {/* Content */}
           <div>
             <h3 className="text-slate-900 mb-3">Content</h3>
             <div className="bg-slate-50 rounded-lg p-6 border border-slate-200">
@@ -163,7 +161,6 @@ export function TemplateViewDialog({ open, onOpenChange, template }: TemplateVie
 
           <Separator />
 
-          {/* Actions */}
           <div className="flex justify-end gap-3">
             <Button variant="outline" onClick={handlePrint}>
               Print Template
